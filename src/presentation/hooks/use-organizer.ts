@@ -1,32 +1,47 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
+import type { Game } from '../../domain/entities/game-types';
 import { createBrowserFileSystem } from '../../infrastructure/file-system/browser-file-system';
-import { createOrganizeLibrary } from '../../app/use-cases/organize-library.use-case';
+import { parseGames } from '../../domain/logic/game-parser';
+import { generateM3u } from '../../domain/logic/m3u-generator';
 
 export function useOrganizer() {
-  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [games, setGames] = useState<Game[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const startProcess = async (pattern: string) => {
-    setStatus('loading');
+  const fileSystem = useMemo(() => createBrowserFileSystem(), []);
 
-    try {
-      const fileSystem = createBrowserFileSystem();
-      const organizeLibrary = createOrganizeLibrary(fileSystem);
+  const scan = async (pattern: string) => {
+    setIsLoading(true);
 
-      await organizeLibrary(pattern);
+    const fileNames = await fileSystem.scanDirectory();
+    const detectedGames = parseGames(pattern, fileNames, 'safe');
+    setGames(detectedGames);
 
-      setStatus('success');
+    setIsLoading(false);
+  };
 
-      console.log('Library organized');
-    } catch (error) {
-      console.error(error);
-      setStatus('error');
+  const organizeSingle = async (game: Game) => {
+    const m3uContent = generateM3u(game);
+
+    await fileSystem.organizeGame(game, m3uContent);
+
+    setGames((prev) => prev.filter((g) => g.name !== game.name));
+  };
+
+  const organizeAll = async () => {
+    setIsLoading(true);
+    for (const game of games) {
+      await organizeSingle(game);
     }
+    setIsLoading(false);
   };
 
   return {
-    startProcess,
-    isLoading: status === 'loading',
-    status,
+    games,
+    isLoading,
+    scan,
+    organizeSingle,
+    organizeAll,
   };
 }

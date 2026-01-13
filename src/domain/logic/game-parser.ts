@@ -3,7 +3,7 @@ import type { Game, GroupingStrategy } from '../entities/game-types';
 export function parseGames(
   discPattern: string,
   files: string[],
-  strategy: GroupingStrategy = 'aggressive',
+  strategy: GroupingStrategy = 'safe',
 ): Game[] {
   const gamesMap = new Map<string, Game>();
   const discTagRegex = new RegExp(`\\s*\\(${discPattern}\\s+\\d+\\)`, 'i');
@@ -33,6 +33,7 @@ export function parseGames(
         name: baseName,
         isMultidisc: isMulti,
         discs: [],
+        status: 'pending',
       });
     }
 
