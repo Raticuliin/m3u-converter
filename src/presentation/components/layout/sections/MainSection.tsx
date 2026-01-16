@@ -1,5 +1,4 @@
-import BrowserGameItem from '../components/BrowserGameItem';
-
+import BrowserGameItem from '../../browser/BrowserGameItem';
 export default function MainSection() {
   return (
     <section

@@ -1,8 +1,8 @@
 import { Coffee, Folder, IterationCcw, SquareLibrary } from 'lucide-react';
-import Header from '../common/Header';
-import NavItem from './components/NavItem';
+import Header from '../shared/Header';
+import NavItem from './NavItem';
 import { useState } from 'react';
-import Button from '../common/Button';
+import Button from '../shared/Button';
 
 export default function Sidebar() {
   const [activeTab, setActiveTab] = useState<'convert' | 'revert'>('convert');

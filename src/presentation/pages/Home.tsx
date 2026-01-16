@@ -1,6 +1,6 @@
-import { Folder, FolderCog, FolderOpen, GamepadDirectional } from 'lucide-react';
-import Button from '../components/common/Button';
-import Header from '../components/common/Header';
+import { Folder } from 'lucide-react';
+import Button from '../components/shared/Button';
+import Header from '../components/shared/Header';
 
 export default function Home({
   scan,

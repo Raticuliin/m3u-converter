@@ -1,5 +1,5 @@
-import DashboardTitle from './components/DashboardTitle';
-import FilterGroup from './components/FilterGroup';
+import DashboardTitle from '../shared/DashboardTitle';
+import FilterGroup from '../browser/FilterGroup';
 import FooterSection from './sections/FooterSection';
 import MainSection from './sections/MainSection';
 

@@ -1,4 +1,4 @@
-import Button from '../../common/Button';
+import Button from '../../shared/Button';
 import { PlusSquare } from 'lucide-react';
 
 export default function FooterSection() {

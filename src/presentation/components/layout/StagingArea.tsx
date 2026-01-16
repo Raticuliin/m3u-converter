@@ -1,4 +1,4 @@
-import DashboardTitle from './components/DashboardTitle';
+import DashboardTitle from '../shared/DashboardTitle';
 
 export default function StagingArea() {
   return (

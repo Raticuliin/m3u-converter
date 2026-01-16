@@ -1,6 +1,6 @@
-import Sidebar from '../components/dashboard/Sidebar';
-import SourceBrowser from '../components/dashboard/SourceBrowser';
-import StagingArea from '../components/dashboard/StagingArea';
+import Sidebar from '../components/layout/Sidebar';
+import SourceBrowser from '../components/layout/SourceBrowser';
+import StagingArea from '../components/layout/StagingArea';
 
 export default function Dashboard() {
   return (

@@ -1,5 +1,5 @@
-import { SearchBar } from './SearchBar';
 import { FilterPill } from './FilterPill';
+import { SearchBar } from './SearchBar';
 
 export default function FilterGroup() {
   return (
