@@ -15,9 +15,11 @@ export default function App() {
 
   const { scan, hasDirectory, organizeList, revertList, status, games, setGames } =
     useOrganizer(fileSystem);
+
   const { filterGameList: filteredGames, filter, updateFilter } = useFilterGames(games);
 
-  const [activeTab, setActiveTab] = useState<'pending' | 'organized'>('pending');
+  const [activeTab, setActiveTab] = useState<'convert' | 'revert'>('convert');
+
   const [queue, setQueue] = useState<Game[]>([]);
 
   const DISC_PATTERN = 'Disc';
@@ -60,7 +62,7 @@ export default function App() {
     setQueue([]);
   };
 
-  if (!hasDirectory) return <Home scan={scan} />;
+  if (!hasDirectory) return <Home scan={scan} discPattern={DISC_PATTERN} />;
   else return <Dashboard />;
   /*
     return (

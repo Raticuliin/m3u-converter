@@ -4,9 +4,12 @@ import FooterSection from './sections/FooterSection';
 import MainSection from './sections/MainSection';
 
 export default function SourceBrowser() {
+  const section = 'browser';
+
   return (
     <section
       className="
+        bg-emerald-500/3
         flex-1 flex flex-col
         border-r border-emerald-500/10"
     >
@@ -21,8 +24,8 @@ export default function SourceBrowser() {
         <DashboardTitle text="Browser" />
         <FilterGroup />
       </section>
-      <MainSection />
-      <FooterSection />
+      <MainSection section={section} />
+      <FooterSection section={section} />
     </section>
   );
 }

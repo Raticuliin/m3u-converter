@@ -26,7 +26,7 @@ const colorMap: Record<ButtonColor, { primary: string; secondary: string }> = {
     // Para danger
     primary: 'bg-rose-500 hover:bg-rose-400 text-white',
     secondary:
-      'border-2 bg-rose-900/5 text-rose-500/80 border-rose-500/30 hover:bg-rose-700/5 active:bg-rose-500/10',
+      'border-2 bg-rose-900/5 text-rose-400/80 border-rose-400/30 hover:bg-rose-700/5 active:bg-rose-400/10',
   },
   amber: {
     // Para warn

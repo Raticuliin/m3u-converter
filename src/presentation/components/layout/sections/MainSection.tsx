@@ -1,5 +1,6 @@
-import BrowserGameItem from '../../browser/BrowserGameItem';
-export default function MainSection() {
+import type { Section } from '../../../../domain/entities/types';
+import GameItem from '../../shared/GameItem';
+export default function MainSection({ section }: { section: Section }) {
   return (
     <section
       className="
@@ -8,7 +9,7 @@ export default function MainSection() {
           flex-1 flex flex-col gap-2
           border-b border-emerald-500/10"
     >
-      <BrowserGameItem />
+      <GameItem variant={section} />
     </section>
   );
 }

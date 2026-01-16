@@ -12,3 +12,4 @@ export interface Game {
 }
 
 export type GroupingStrategy = 'safe' | 'aggressive';
+export type Section = 'browser' | 'queue';

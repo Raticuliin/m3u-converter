@@ -1,6 +1,6 @@
 import { Coffee, Folder, IterationCcw, SquareLibrary } from 'lucide-react';
 import Header from '../shared/Header';
-import NavItem from './NavItem';
+import NavItem from '../shared/NavItem';
 import { useState } from 'react';
 import Button from '../shared/Button';
 
@@ -10,6 +10,8 @@ export default function Sidebar() {
   return (
     <aside
       className="
+
+        bg-emerald-950/3
         p-5
         relative
         flex flex-col justify-between
