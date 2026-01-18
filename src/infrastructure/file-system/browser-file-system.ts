@@ -46,11 +46,9 @@ export const createBrowserFileSystem = (): IFileSystem => {
       }
 
       try {
-        // Accedemos a la subcarpeta que ya existe
         const folderHandle = await rootHandle.getDirectoryHandle(folderName);
         const files: string[] = [];
 
-        // Recorremos sus archivos internos
         for await (const entry of folderHandle.values()) {
           if (entry.kind === 'file' && entry.name.toLowerCase().endsWith('.chd')) {
             files.push(entry.name);
@@ -58,7 +56,6 @@ export const createBrowserFileSystem = (): IFileSystem => {
         }
         return files;
       } catch (error) {
-        // Si la carpeta está vacía o no se puede leer, devolvemos array vacío
         return [];
       }
     },
@@ -69,22 +66,18 @@ export const createBrowserFileSystem = (): IFileSystem => {
       }
 
       try {
-        // 1. Crear subcarpeta
         const gameFolderHandle = await rootHandle.getDirectoryHandle(`${game.name}.m3u`, {
           create: true,
         });
 
-        // 2. Crear el archivo .m3u dentro de la carpeta
         const m3uFileHandle = await gameFolderHandle.getFileHandle(`${game.name}.m3u`, {
           create: true,
         });
 
-        // 3. Escribir contenido del .m3u
         const writable = await m3uFileHandle.createWritable();
         await writable.write(m3uContent);
         await writable.close();
 
-        // 4. Mover los archivos .chd
         for (const fileName of game.discs) {
           const fileHandle = fileHandles.get(fileName);
 
@@ -108,7 +101,6 @@ export const createBrowserFileSystem = (): IFileSystem => {
 
         const folderHandle = await rootHandle.getDirectoryHandle(folderName);
 
-        // 1. Mover los discos fuera de la carpeta
         for (const discName of game.discs) {
           try {
             const discHandle = await folderHandle.getFileHandle(discName);
@@ -121,14 +113,12 @@ export const createBrowserFileSystem = (): IFileSystem => {
           }
         }
 
-        // 2. Eliminar archivo dentro de la carpeta
         try {
           await folderHandle.removeEntry(`${game.name}.m3u`);
         } catch (error) {
           console.warn(`Couldnt find or remove file ${game.name}.m3u`);
         }
 
-        // 3. Eliminar carpeta
         await rootHandle.removeEntry(folderName, { recursive: true });
       } catch (error) {
         console.error(`Error revirtiendo juego ${game.name}`);

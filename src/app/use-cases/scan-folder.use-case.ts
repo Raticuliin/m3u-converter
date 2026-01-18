@@ -10,36 +10,36 @@ export const createScanFolder = (fileSystem: IFileSystem): ScanFolderUseCase => 
 
     if (entries.length === 0) return [];
 
-    // Busco los juegos organizados
-    const organizedNames = entries
-      .filter((name) => name.toLowerCase().endsWith('.m3u'))
-      .map((name) => name.replace(/\.m3u$/i, ''));
-
-    // Busco los archivos sueltos
+    const m3uFolders = entries.filter((name) => name.toLowerCase().endsWith('.m3u'));
     const chdFiles = entries.filter((name) => name.toLowerCase().endsWith('.chd'));
 
-    const detectedGames = parseGames(discPattern, chdFiles);
+    const convertedGamesSet = new Set(m3uFolders.map((name) => name.replace(/\.m3u$/i, '')));
 
-    const finalGames: Game[] = detectedGames.map((game) => {
-      const isAlreadyOrganized = organizedNames.includes(game.name);
+    const detectedGamesFromChds = parseGames(discPattern, chdFiles);
+
+    const finalGames: Game[] = detectedGamesFromChds.map((game) => {
+      const isConverted = convertedGamesSet.has(game.name);
       return {
         ...game,
-        status: isAlreadyOrganized ? 'organized' : 'pending',
+        format: '.chd',
+        isConverted: isConverted,
       };
     });
 
-    for (const orgName of organizedNames) {
-      const alreadyInList = finalGames.some((g) => g.name === orgName);
+    for (const folderName of convertedGamesSet) {
+      const gameName = folderName.replace(/\.m3u$/i, '');
+
+      const alreadyInList = finalGames.some((g) => g.name === gameName);
 
       if (!alreadyInList) {
-        const folderName = `${orgName}.m3u`;
         const discsInside = await fileSystem.getFilesInFolder(folderName);
 
         finalGames.push({
-          name: orgName,
+          name: gameName,
           discs: discsInside,
           isMultiDisc: discsInside.length > 1,
-          status: 'organized',
+          format: '.m3u',
+          isConverted: true,
         });
       }
     }

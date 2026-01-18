@@ -15,32 +15,48 @@ export function useOrganizer(fileSystem: IFileSystem) {
   const { isReverting, revert } = useRevertGame(fileSystem);
   const [isRevertingList, setIsRevertingList] = useState(false);
 
-  const organizeList = async (gameList: Game[]) => {
+  const organizeList = async (gameList: Game[], onGameSuccess?: (game: Game) => void) => {
     setIsOrganizingList(true);
 
-    try {
-      for (const game of gameList) {
+    for (const game of [...gameList]) {
+      try {
         await organize(game);
+
+        setGames((prevGames) =>
+          prevGames.map((g) => (g.name === game.name ? { ...g, isConverted: true } : g)),
+        );
+
+        if (onGameSuccess) {
+          onGameSuccess(game);
+        }
+      } catch (error) {
+        console.error(`Error organizing game ${game.name}`, error);
       }
-    } catch (error) {
-      console.error(`Error organizing the list `, error);
-    } finally {
-      setIsOrganizingList(false);
     }
+
+    setIsOrganizingList(false);
   };
 
-  const revertList = async (gameList: Game[]) => {
+  const revertList = async (gameList: Game[], onGameSuccess?: (game: Game) => void) => {
     setIsRevertingList(true);
 
-    try {
-      for (const game of gameList) {
+    for (const game of [...gameList]) {
+      try {
         await revert(game);
+
+        setGames((prevGames) =>
+          prevGames.map((g) => (g.name === game.name ? { ...g, isConverted: false } : g)),
+        );
+
+        if (onGameSuccess) {
+          onGameSuccess(game);
+        }
+      } catch (error) {
+        console.error(`Error reverting game ${game.name}`, error);
       }
-    } catch (error) {
-      console.error(`Error reverting the list `, error);
-    } finally {
-      setIsRevertingList(false);
     }
+
+    setIsRevertingList(false);
   };
 
   return {

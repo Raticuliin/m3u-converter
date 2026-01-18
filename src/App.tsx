@@ -14,8 +14,7 @@ import SourceBrowser from './presentation/components/layout/SourceBrowser';
 export default function App() {
   const fileSystem = useMemo(() => createBrowserFileSystem(), []);
 
-  const { scan, hasDirectory, organizeList, revertList, status, games, setGames } =
-    useOrganizer(fileSystem);
+  const { scan, hasDirectory, organizeList, revertList, games } = useOrganizer(fileSystem);
 
   const { filteredGames, filter, updateFilter } = useFilterGames(games);
 
@@ -24,13 +23,30 @@ export default function App() {
 
   const DISC_PATTERN = 'Disc';
 
+  useEffect(() => {
+    setQueueGameList([]);
+  }, [currentTab]);
+
   const handleScan = () => {
     scan(DISC_PATTERN);
   };
 
-  const browserGameList = filteredGames.filter(
-    (game) => !queueGameList.some((queueGame) => queueGame.name === game.name),
-  );
+  const browserGameList = useMemo(() => {
+    return filteredGames.filter((game) => {
+      const isInQueue = queueGameList.some((q) => q.name === game.name);
+      if (isInQueue) return false;
+
+      if (currentTab === 'convert') {
+        return !game.isConverted;
+      }
+
+      if (currentTab === 'revert') {
+        return game.isConverted;
+      }
+
+      return true;
+    });
+  }, [filteredGames, queueGameList, currentTab]);
 
   const addGameToQueue = (game: Game) => {
     setQueueGameList((prev) => {
@@ -40,8 +56,10 @@ export default function App() {
   };
 
   const addAllGamesToQueue = (browserGames: Game[]) => {
-    browserGames.forEach((game) => {
-      addGameToQueue(game);
+    setQueueGameList((prev) => {
+      const existingGames = new Set(prev.map((g) => g.name));
+      const newUnique = browserGames.filter((bg) => !existingGames.has(bg.name));
+      return [...prev, ...newUnique];
     });
   };
 
@@ -51,10 +69,29 @@ export default function App() {
     });
   };
 
-  const removeAllGamesFromQueue = (queueGames: Game[]) => {
-    queueGames.forEach((game) => {
-      removeGameFromQueue(game);
+  const removeAllGamesFromQueue = (queueGames?: Game[]) => {
+    if (!queueGames || queueGames.length === 0) {
+      setQueueGameList([]);
+      return;
+    }
+    setQueueGameList((prev) => {
+      const namesToRemove = new Set(queueGames.map((g) => g.name));
+      return prev.filter((g) => !namesToRemove.has(g.name));
     });
+  };
+
+  const handleGameSuccess = (game: Game) => {
+    setQueueGameList((prev) => prev.filter((g) => g.name !== game.name));
+  };
+
+  const handleProcessQueue = async () => {
+    if (queueGameList.length === 0) return;
+
+    if (currentTab === 'convert') {
+      await organizeList(queueGameList, handleGameSuccess);
+    } else {
+      await revertList(queueGameList, handleGameSuccess);
+    }
   };
 
   if (!hasDirectory) {
@@ -79,6 +116,7 @@ export default function App() {
             gameList={queueGameList}
             removeGameFromQueue={removeGameFromQueue}
             removeAllGamesFromQueue={removeAllGamesFromQueue}
+            convertGames={handleProcessQueue}
           />
         }
       />

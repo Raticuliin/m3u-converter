@@ -5,15 +5,19 @@ import FooterSection from './sections/FooterSection';
 import MainSection from './sections/MainSection';
 import type { Game } from '../../../domain/entities/types';
 
+interface Props {
+  gameList: Game[];
+  removeGameFromQueue: (...args: any) => void;
+  removeAllGamesFromQueue: (...args: any) => void;
+  convertGames: () => void;
+}
+
 export default function StagingArea({
   gameList,
   removeGameFromQueue,
   removeAllGamesFromQueue,
-}: {
-  gameList: Game[];
-  removeGameFromQueue: (...args: any) => void;
-  removeAllGamesFromQueue: (...args: any) => void;
-}) {
+  convertGames,
+}: Props) {
   const section = 'queue';
   return (
     <section
@@ -31,7 +35,7 @@ export default function StagingArea({
                 border-b border-emerald-500/10"
       >
         <DashboardTitle text="Selection queue" />
-        <Button onClick={() => {}} Icon={CircleArrowRight} text="CONVERT" />
+        <Button onClick={convertGames} Icon={CircleArrowRight} text="CONVERT" />
       </section>
       <MainSection section={section} gameList={gameList} moveGame={removeGameFromQueue} />
       <FooterSection section={section} gameList={gameList} moveAllGames={removeAllGamesFromQueue} />

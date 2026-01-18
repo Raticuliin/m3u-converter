@@ -1,7 +1,7 @@
-export interface Filter {
-  search: string;
-  onlyMultiDisc: boolean;
-}
+export type GroupingStrategy = 'safe' | 'aggressive';
+export type Section = 'browser' | 'queue';
+export type Tab = 'convert' | 'revert';
+export type Format = '.chd';
 
 export interface Game {
   name: string;
@@ -11,6 +11,7 @@ export interface Game {
   isConverted: boolean;
 }
 
-export type GroupingStrategy = 'safe' | 'aggressive';
-export type Section = 'browser' | 'queue';
-export type Tab = 'convert' | 'revert';
+export interface Filter {
+  search: string;
+  onlyMultiDisc: boolean;
+}

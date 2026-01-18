@@ -13,7 +13,7 @@ export function useOrganizeGame(fileSystem: IFileSystem) {
     setIsOrganizing(true);
 
     try {
-      await organizeGame(game);
+      if (!game.isConverted) await organizeGame(game);
     } catch (error) {
       console.error(`Error organizing ${game.name}: `, error);
     } finally {
