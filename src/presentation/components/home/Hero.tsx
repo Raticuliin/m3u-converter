@@ -1,4 +1,4 @@
-import { Folder, ArrowRight } from 'lucide-react';
+import { Folder } from 'lucide-react';
 import Button from '../shared/Button';
 
 export default function Hero({ handleScan }: { handleScan: (discPattern: string) => void }) {
